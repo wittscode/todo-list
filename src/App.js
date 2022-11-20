@@ -5,17 +5,17 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [tasksList, setTasksList] = useState([])
-
+ 
   // Local Storage
-  useEffect (() => {
-    if (tasksList.length === 0) return;
-    localStorage.setItem('tasksList', JSON.stringify(tasksList))
-  }, [tasksList]);
+  // useEffect (() => {
+  //   if (tasksList.length === 0) return;
+  //   localStorage.setItem('tasksList', JSON.stringify(tasksList))
+  // }, [tasksList]);
 
-  useEffect(() => {
-    const tasksList  = JSON.parse(localStorage.getItem('tasksList'))
-    setTasksList(tasksList);
-  }, [])
+  // useEffect(() => {
+  //   const tasksList  = JSON.parse(localStorage.getItem('tasksList'))
+  //   setTasksList(tasksList);
+  // }, [])
 
   //Add New Tasks
 
@@ -33,8 +33,32 @@ function App() {
     })
   }
 
+  const numberCompleted = tasksList.filter(task => task.done).length;
+  const numberTotal = tasksList.length;
+
+  function getMessage() {
+    const percentageDone = Math.trunc((numberCompleted/numberTotal)*100);
+    if (numberTotal === 0) {
+      return `Start adding some works for today`
+    } else {
+      if (percentageDone === 0) {
+        return `Here's your works for today, knock some off!`
+      } 
+  
+      if (percentageDone > 0 && percentageDone < 100) {
+        return `${percentageDone}% Done, ${100 - percentageDone}% to go!`
+      }
+      
+      if (percentageDone === 100) {
+        return `Work's done today, take some time off`
+      }
+    }
+  }
+
   return (
     <main className="App">
+      <h1>{numberCompleted}/{numberTotal} Complete</h1>
+      <h2>{getMessage()}</h2>
       <TaskForm onAdd={(name) => addTask(name)} />
 
       {tasksList.map((task, index) => (
