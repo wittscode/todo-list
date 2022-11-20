@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [tasksList, setTasksList] = useState([])
-``
+
   // Local Storage
   useEffect (() => {
     if (tasksList.length === 0) return;
@@ -25,12 +25,20 @@ function App() {
     })
   }
 
+  function updateTaskDone(taskIndex, newDone) {
+    setTasksList(prev => {
+      const newTasksList = [...prev];
+      newTasksList[taskIndex].done = newDone;
+      return newTasksList;
+    })
+  }
+
   return (
     <main className="App">
       <TaskForm onAdd={(name) => addTask(name)} />
 
-      {tasksList.map((task) => (
-        <Task {...task} />
+      {tasksList.map((task, index) => (
+        <Task {...task} onToggle={done => updateTaskDone(index, done)} />
       ))}
       
     </main>
