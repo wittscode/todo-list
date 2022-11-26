@@ -2,6 +2,7 @@ import Task from "./Task";
 import TaskForm from "./TaskForm";
 import "./App.css";
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [tasksList, setTasksList] = useState([])
@@ -17,13 +18,22 @@ function App() {
   //   setTasksList(tasksList);
   // }, [])
 
-  //Add New Tasks
+  // Add New Tasks
+
+  
 
   function addTask(name) {
-    setTasksList(prev => {
-      return [...prev, {name:name, done:false}]
-    })
+
+    const newTask = {
+      name:name, 
+      done:false, 
+      id: uuidv4()
+    }
+
+    setTasksList([...tasksList, newTask])
   }
+
+
 
   function updateTaskDone(taskIndex, newDone) {
     setTasksList(prev => {
@@ -55,14 +65,18 @@ function App() {
     }
   }
 
+  function deleteTask(id) {
+    setTasksList(tasksList.filter((task) => id !== task.id));
+  }
+
   return (
     <main className="App">
       <h1>{numberCompleted}/{numberTotal} Complete</h1>
       <h2>{getMessage()}</h2>
       <TaskForm onAdd={(name) => addTask(name)} />
 
-      {tasksList.map((task, index) => (
-        <Task {...task} onToggle={done => updateTaskDone(index, done)} />
+      {tasksList.map((task) => (
+        <Task {...task} key={task.id} onToggle={done => updateTaskDone(done)} deleteTask={deleteTask}/>
       ))}
       
     </main>
