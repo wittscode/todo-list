@@ -20,7 +20,6 @@ function App() {
 
   // Add New Tasks
 
-  
 
   function addTask(name) {
 
@@ -33,14 +32,39 @@ function App() {
     setTasksList([...tasksList, newTask])
   }
 
+ 
+  // setTasksList(prev => {
+  //   const newTasksList = [...prev];
+  //   newTasksList[taskIndex].done = newDone;
+  //   return newTasksList;
+  // })
 
 
-  function updateTaskDone(taskIndex, newDone) {
-    setTasksList(prev => {
-      const newTasksList = [...prev];
-      newTasksList[taskIndex].done = newDone;
-      return newTasksList;
-    })
+
+  function updateTaskDone(taskId, newDone) {
+    // setTasksList(tasksList[taskId].done = newDone)
+
+  setTasksList(prev => {
+    // const newTasksList = [...prev]
+    // , {[id]: newDone}}
+    // const taskItem = newTasksList.find(x => x.id == taskId)
+    // console.log(taskItem);
+
+    return prev.map(x =>  {
+      if (x.id == taskId) {
+        return {...x, done: newDone}
+      } else {
+        return x;
+      }
+    });
+
+  
+
+    // newTasksList = newDone;
+    // return newTasksList;
+  })
+ 
+  
   }
 
   const numberCompleted = tasksList.filter(task => task.done).length;
@@ -76,7 +100,7 @@ function App() {
       <TaskForm onAdd={(name) => addTask(name)} />
 
       {tasksList.map((task) => (
-        <Task {...task} key={task.id} onToggle={done => updateTaskDone(done)} deleteTask={deleteTask}/>
+        <Task {...task} key={task.id} updateTaskDone={updateTaskDone} deleteTask={deleteTask}/>
       ))}
       
     </main>
